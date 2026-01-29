@@ -62,9 +62,9 @@
         }
 
         /* 文字ごとの位置とアニメーション設定 */
-        .text-1 { top: 20%; left: 60%; animation: blowAway1 3s infinite; }
-        .text-2 { top: 40%; left: 65%; animation: blowAway2 3.5s infinite; }
-        .text-3 { top: 60%; left: 60%; animation: blowAway3 2.5s infinite; }
+        .text-1 { top: 65%; left: 50%; animation: blowAway1 3s infinite; }
+        .text-2 { top: 65%; left: 50%; animation: blowAway2 3.5s infinite; }
+        .text-3 { top: 65%; left: 50%; animation: blowAway3 2.5s infinite; }
 
         @keyframes blowAway1 {
             0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
@@ -128,10 +128,94 @@
             padding-top: 20px;
         }
 
+        /* --- 風エフェクト（キャラ中央から噴出） --- */
+        .wind-container {
+            position: absolute;
+            top: 65%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .wind-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(90,138,148,0.6), rgba(90,138,148,0.3), transparent);
+            border-radius: 2px;
+            transform-origin: 0 50%;
+        }
+
+        /* 放射状に各方向へ噴出（テキストと同距離） */
+        .wind-line:nth-child(1)  { width: 60px;  animation: windOut 2.5s 0.0s infinite ease-out; --angle: -15deg; --dist: 300px; }
+        .wind-line:nth-child(2)  { width: 80px;  animation: windOut 3.0s 0.3s infinite ease-out; --angle: -5deg;  --dist: 340px; }
+        .wind-line:nth-child(3)  { width: 50px;  animation: windOut 2.2s 0.6s infinite ease-out; --angle: 10deg;  --dist: 280px; }
+        .wind-line:nth-child(4)  { width: 70px;  animation: windOut 2.8s 0.2s infinite ease-out; --angle: -25deg; --dist: 320px; }
+        .wind-line:nth-child(5)  { width: 55px;  animation: windOut 3.2s 0.8s infinite ease-out; --angle: 20deg;  --dist: 290px; }
+        .wind-line:nth-child(6)  { width: 75px;  animation: windOut 2.6s 1.0s infinite ease-out; --angle: -35deg; --dist: 310px; }
+        .wind-line:nth-child(7)  { width: 45px;  animation: windOut 2.9s 0.5s infinite ease-out; --angle: 30deg;  --dist: 270px; }
+        .wind-line:nth-child(8)  { width: 65px;  animation: windOut 2.4s 1.2s infinite ease-out; --angle: 0deg;   --dist: 330px; }
+        .wind-line:nth-child(9)  { width: 50px;  animation: windOut 3.1s 0.1s infinite ease-out; --angle: -40deg; --dist: 280px; }
+        .wind-line:nth-child(10) { width: 55px;  animation: windOut 2.7s 0.7s infinite ease-out; --angle: 35deg;  --dist: 300px; }
+
+        @keyframes windOut {
+            0% {
+                transform: rotate(var(--angle)) translateX(0) scaleX(0.2);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.9;
+                transform: rotate(var(--angle)) translateX(20px) scaleX(0.6);
+            }
+            40% {
+                opacity: 0.6;
+                transform: rotate(var(--angle)) translateX(calc(var(--dist) * 0.5)) scaleX(1);
+            }
+            100% {
+                transform: rotate(var(--angle)) translateX(var(--dist)) scaleX(0.1);
+                opacity: 0;
+            }
+        }
+
+        /* 風パーティクル（中央から放射） */
+        .wind-particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: rgba(90,138,148,0.35);
+            border-radius: 50%;
+        }
+
+        .wind-particle:nth-child(11) { animation: particleOut 3.0s 0.0s infinite ease-out; --px: 280px; --py: -100px; }
+        .wind-particle:nth-child(12) { animation: particleOut 2.5s 0.4s infinite ease-out; --px: 320px; --py: 50px; }
+        .wind-particle:nth-child(13) { animation: particleOut 3.3s 0.9s infinite ease-out; --px: 250px; --py: -80px; }
+        .wind-particle:nth-child(14) { animation: particleOut 2.8s 0.2s infinite ease-out; --px: 260px; --py: 120px; }
+        .wind-particle:nth-child(15) { animation: particleOut 2.4s 0.6s infinite ease-out; --px: 220px; --py: 90px; }
+        .wind-particle:nth-child(16) { animation: particleOut 3.1s 1.1s infinite ease-out; --px: 340px; --py: -30px; }
+        .wind-particle:nth-child(17) { animation: particleOut 2.7s 0.3s infinite ease-out; --px: 300px; --py: -120px; }
+        .wind-particle:nth-child(18) { animation: particleOut 2.6s 0.8s infinite ease-out; --px: 290px; --py: 50px; }
+
+        @keyframes particleOut {
+            0% {
+                transform: translate(0, 0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+                transform: translate(0, 0) scale(1.5);
+            }
+            100% {
+                transform: translate(var(--px), var(--py)) scale(0);
+                opacity: 0;
+            }
+        }
+
         /* スマホ対応 */
         @media (max-width: 600px) {
             .main-copy { font-size: 22px; }
-            .blown-text { display: none; } /* スマホではごちゃつくので消す */
+            .blown-text { display: none; }
+            .wind-container { display: none; }
             .balloon { width: 100%; margin-bottom: 10px; }
         }
     </style>
@@ -144,7 +228,32 @@
         <h1 class="main-copy">動画制作の「面倒」と「コスト」<br>ぜんぶ吹き飛ばしました。</h1>
         <p class="sub-copy">汎用型AIショート動画制作サービス、開始。</p>
 
+              <a href="https://drive.google.com/uc?export=download&id=1DvQpC9CbCrC3WdKYWpybJax7HFl0bvHf" class="cta-button">
+            資料をダウンロードする (PDF)
+        </a>
+
         <div class="hero-area">
+            <div class="wind-container">
+                <div class="wind-line"></div>
+                <div class="wind-line"></div>
+                <div class="wind-line"></div>
+                <div class="wind-line"></div>
+                <div class="wind-line"></div>
+                <div class="wind-line"></div>
+                <div class="wind-line"></div>
+                <div class="wind-line"></div>
+                <div class="wind-line"></div>
+                <div class="wind-line"></div>
+                <div class="wind-particle"></div>
+                <div class="wind-particle"></div>
+                <div class="wind-particle"></div>
+                <div class="wind-particle"></div>
+                <div class="wind-particle"></div>
+                <div class="wind-particle"></div>
+                <div class="wind-particle"></div>
+                <div class="wind-particle"></div>
+            </div>
+
             <div class="blown-text text-1">制作費が高い...</div>
             <div class="blown-text text-2">撮影スケジュール...</div>
             <div class="blown-text text-3">納期が長い</div>
@@ -163,10 +272,6 @@
             そんなお悩みをお持ちの企業様へ。<br>
 
         </p>
-
-        <a href="https://drive.google.com/uc?export=download&id=1DvQpC9CbCrC3WdKYWpybJax7HFl0bvHf" class="cta-button">
-            資料をダウンロードする (PDF)
-        </a>
 
         <footer>
             <p>プリ・テック株式会社 デジタルイノベーショングループ<br>
